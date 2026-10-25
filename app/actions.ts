@@ -1,23 +1,11 @@
 'use server';
-import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/supabase';
 import { requireAdmin } from '@/lib/admin';
+import { MEDIA_IMAGES } from '@/lib/media-images';
 
-export async function login() {
- const supabase = await db();
- const h = await headers();
- const host = h.get('x-forwarded-host') || h.get('host') || '';
- // Hosts are supplied by Vercel; reject invalid URL delimiters and other origins.
- if (!/^(localhost:3000|caption-archive-admin(?:-[a-z0-9-]+)?\.vercel\.app)$/.test(host)) {
-   throw new Error('Unrecognized application address');
- }
- const origin = `${host.startsWith('localhost:') ? 'http' : 'https'}://${host}`;
- const {data,error}=await supabase.auth.signInWithOAuth({provider:'google',options:{redirectTo:`${origin}/auth/callback`,queryParams:{prompt:'select_account'}}});
- if(error||!data.url) redirect('/login?error=oauth');
- redirect(data.url);
-}
+export async function login() {redirect('https://caption-archive-admin.vercel.app/auth/login');}
 export async function logout() {const client=await db();await client.auth.signOut();redirect('/login');}
 export type ActionState = { error: string };
 const field=(f:FormData,key:string)=>String(f.get(key)??'').trim();
@@ -34,7 +22,7 @@ export async function saveCaption(_previous:ActionState, form:FormData):Promise<
  if(!caption_text||caption_text.length>500||!image_description||image_description.length>2000)return {error:'Enter a caption (1–500 characters) and scene description (1–2,000 characters).'};
  if(!['Deadpan','Unhinged','Wholesome'].includes(tone))return {error:'Choose a listed tone.'};
  if(model.length>120||(prompt?.length??0)>4000)return {error:'Model must be at most 120 characters and prompt at most 4,000.'};
- if(image_path&&!/^\/memes\/[a-z0-9-]+\.webp$/.test(image_path))return {error:'Use an existing /memes/name.webp image path, or leave it blank.'};
+ if(!MEDIA_IMAGES.some(image=>image.path===image_path))return {error:'Choose a picture from the gallery before saving.'};
  const record={caption_text,image_description,prompt,tone,model,image_path};
  const result=id ? await supabase.from('captions').update(record).eq('id',Number(id)).select('id').single() : await supabase.from('captions').insert(record).select('id').single();
  if(result.error)return {error:'The caption could not be saved. Check the fields and try again.'};

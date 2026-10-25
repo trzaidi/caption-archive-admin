@@ -13,7 +13,7 @@ export async function proxy(request:NextRequest) {
  });
  const {data:{user}}=await client.auth.getUser();
  const path=request.nextUrl.pathname;
- const publicRoute=path==='/login'||path==='/auth/callback';
+ const publicRoute=path==='/login'||path==='/auth/callback'||path==='/auth/login';
  let destination:string|undefined;
  if(!publicRoute){
   if(!user||user.is_anonymous||user.app_metadata?.provider!=='google')destination='/login';
