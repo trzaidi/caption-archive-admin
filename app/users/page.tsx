@@ -1,0 +1,9 @@
+import {requireAdmin} from '@/lib/admin';import {Shell} from '@/components/shell';
+export const dynamic='force-dynamic';
+export default async function Users({searchParams}:{searchParams:Promise<{q?:string}>}){
+ const {supabase,user}=await requireAdmin();const {q}=await searchParams;
+ const {data,error}=await supabase.from('profiles').select('id,first_name,last_name,avatar_path,updated_at,is_superadmin').order('updated_at',{ascending:false}).limit(500);
+ if(error)throw new Error('Unable to load profiles.');
+ const rows=(data??[]).filter(x=>!q||`${x.first_name} ${x.last_name} ${x.id}`.toLowerCase().includes(q.toLowerCase()));
+ return <Shell active="/users" email={user.email??''}><div className="pageheading"><div><p className="kicker">IDENTITY / DIRECTORY</p><h1>Users<span className="accent">.</span></h1><p>Read-only directory of registered profiles and authorization roles.</p></div></div><section className="panel"><div className="paneltitle"><h2>Profile directory</h2><span className="muted">{rows.length} profiles</span></div><form className="search"><input name="q" defaultValue={q??''} aria-label="Search profiles" placeholder="Search name or user ID"/><button>Search</button></form><div className="tablewrap"><table><thead><tr><th>PROFILE</th><th>USER ID</th><th>ROLE</th><th>UPDATED</th></tr></thead><tbody>{rows.map(r=><tr key={r.id}><td><strong>{[r.first_name,r.last_name].filter(Boolean).join(' ')||'Unnamed member'}</strong></td><td className="mono">{r.id}</td><td><span className={r.is_superadmin?'tag admin':'tag'}>{r.is_superadmin?'SUPERADMIN':'MEMBER'}</span></td><td>{new Date(r.updated_at).toLocaleDateString()}</td></tr>)}</tbody></table></div></section></Shell>
+}
