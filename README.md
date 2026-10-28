@@ -5,12 +5,12 @@ Separate Next.js admin application for the Caption Archive rating app. Google si
 ## Features
 
 - Dashboard: profile and caption totals, community votes, approval rate, rankings, creative mix, publishing activity and audit trail.
-- Read-only profile directory with search.
+- Read-only profile directory with account emails and search by name, email or ID.
 - Create, read, update and delete AI-generated caption records, including scene, prompt, model, tone and existing image path. Generation is available through the linked rating app.
 - Search and pagination for the media inventory.
-- Read-only aggregate scores and individual upvote/downvote records.
+- Read-only aggregate scores and an individual vote ledger showing voter, caption, vote and time.
 - Inline form errors, pending states, delete confirmation, responsive navigation and accessible controls.
-- Transactional database audit log for administrator media changes.
+- Transactional database audit log for administrator media changes, showing which administrator made each change.
 
 ## Existing project
 
@@ -25,7 +25,7 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
 
 Only a public/publishable key is used. Never add a service-role key to this application.
 
-The database setup in `sql/001_admin_security.sql` and `sql/002_role_guard_and_atomic_audit.sql` has already been applied. The first file is historical reference and must not be rerun against existing policies. The second adds role guards, compatible profile upserts, media privileges and transactional audit logging. SQL administrator access is required to change administrator assignments; the app cannot grant roles.
+The database setup in `sql/001_admin_security.sql` and `sql/002_role_guard_and_atomic_audit.sql` has already been applied. The first file is historical reference and must not be rerun against existing policies. The second adds role guards, compatible profile upserts, media privileges and transactional audit logging. `sql/003_admin_directory.sql` adds an administrator-only function that returns account emails for the directory, audit trail and vote ledger; until it is applied those views fall back to names. SQL administrator access is required to change administrator assignments; the app cannot grant roles.
 
 For a new installation, identify the intended Google account in `auth.users` and set only its matching profile's `is_superadmin` to `true` using the Supabase SQL editor. This privileged bootstrap solves the initial administrator lockout.
 
