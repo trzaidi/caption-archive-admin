@@ -75,10 +75,10 @@ npm run typecheck
 
 | Source | Feedback |
 | --- | --- |
-| PM | The work is great and he is not worried about the submissions. No specific changes requested (as of November 1, 2026). |
+| PM | PM approves. |
 | Project owner | Admins must be able to upload profile photos. Uploads that hit a limit must say why. |
 
-No specific PM change is claimed. This iteration combines the owner's requests with a self-audit of the Week 6 admin panel.
+This iteration combines the owner's requests with a self-audit of the Week 6 admin panel.
 
 | Problem found | Change |
 | --- | --- |
