@@ -2,7 +2,7 @@
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { requireAdmin } from '@/lib/admin';
-import { PHOTO_BUCKET, PHOTO_MAX_BYTES, PHOTO_TYPES, photoPath } from '@/lib/photos';
+import { PHOTO_BUCKET, PHOTO_MAX_BYTES, PHOTO_TYPES, TYPE_MESSAGE, sizeMessage, photoPath } from '@/lib/photos';
 import type { ActionState } from '@/app/actions';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -19,8 +19,8 @@ export async function uploadProfilePhoto(_previous: ActionState, form: FormData)
   const file = form.get('photo');
   if (!UUID.test(userId)) return { error: 'Invalid member.' };
   if (!(file instanceof File) || file.size === 0) return { error: 'Choose an image to upload.' };
-  if (!PHOTO_TYPES.includes(file.type)) return { error: 'Use a JPG, PNG, WEBP or GIF image.' };
-  if (file.size > PHOTO_MAX_BYTES) return { error: 'Use an image smaller than 4 MB.' };
+  if (!PHOTO_TYPES.includes(file.type)) return { error: TYPE_MESSAGE };
+  if (file.size > PHOTO_MAX_BYTES) return { error: sizeMessage(file.size) };
   const { data: profile, error: profileError } = await supabase.from('profiles').select('id,avatar_path').eq('id', userId).maybeSingle();
   if (profileError || !profile) return { error: 'This member no longer exists.' };
   const path = photoPath(userId);

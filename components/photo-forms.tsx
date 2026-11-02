@@ -1,7 +1,7 @@
 'use client';
 import { useActionState, useRef, useState } from 'react';
 import { uploadProfilePhoto, deleteProfilePhoto } from '@/app/photo-actions';
-import { PHOTO_MAX_BYTES, PHOTO_TYPES } from '@/lib/photos';
+import { PHOTO_MAX_BYTES, PHOTO_TYPES, TYPE_MESSAGE, sizeMessage } from '@/lib/photos';
 
 export function PhotoCard({ userId, name, email, url }: { userId: string; name: string; email: string | null; url: string | null }) {
   const [state, upload, uploading] = useActionState(uploadProfilePhoto, { error: '' });
@@ -18,8 +18,8 @@ export function PhotoCard({ userId, name, email, url }: { userId: string; name: 
     if (preview) URL.revokeObjectURL(preview);
     setPreview(null);
     if (!file) return;
-    if (!PHOTO_TYPES.includes(file.type)) { setLocalError('Use a JPG, PNG, WEBP or GIF image.'); if (input.current) input.current.value = ''; return; }
-    if (file.size > PHOTO_MAX_BYTES) { setLocalError('Use an image smaller than 4 MB.'); if (input.current) input.current.value = ''; return; }
+    if (!PHOTO_TYPES.includes(file.type)) { setLocalError(TYPE_MESSAGE); if (input.current) input.current.value = ''; return; }
+    if (file.size > PHOTO_MAX_BYTES) { setLocalError(sizeMessage(file.size)); if (input.current) input.current.value = ''; return; }
     setPreview(URL.createObjectURL(file));
   }
 
