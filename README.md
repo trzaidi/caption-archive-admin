@@ -32,7 +32,9 @@ Apply `sql/004_week7_observability.sql` once in the Supabase SQL editor. Until i
 | Allowed signup domains | `/signup-domains` | Create, read, update, delete |
 | Whitelisted email addresses | `/whitelisted-emails` | Create, read, update, delete |
 
-Image upload is not offered: captions use the fixed picture gallery bundled with the rating app, so the conditional image requirement does not apply.
+| Images (profile photos) | `/profile-photos` | Upload, view, replace, delete |
+
+Members upload profile photos in the rating app, so the conditional image requirement applies to those photos. Apply `sql/005_admin_profile_photos.sql` after 004. It lets superadmins manage the `avatars` storage bucket and the photo on any profile, and audits each change. Admin uploads are capped at 4 MB because Vercel rejects larger request bodies. Caption pictures remain the fixed gallery bundled with the rating app.
 
 The migration seeds the pipeline the rating app actually runs: one chain per tone with three steps, the Gemini model behind each provider, a Columbia glossary, 15 curated example captions and two signup domains. It backfills the response log from captions already generated. Every change made in the panel is written to the audit trail in the same transaction. Chains and steps are versioned through migrations, so the panel reads them only.
 

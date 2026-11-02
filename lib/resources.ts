@@ -229,7 +229,7 @@ export const RESOURCES: Resource[] = [
 export const findResource = (key: string) => RESOURCES.find(r => r.key === key);
 
 export const NAV_GROUPS: { label: string; links: [string, string][] }[] = [
-  { label: 'WORKSPACE', links: [['/', 'Overview'], ['/media', 'AI Media'], ['/users', 'Users & Profiles'], ['/ratings', 'Ratings & Votes']] },
+  { label: 'WORKSPACE', links: [['/', 'Overview'], ['/media', 'AI Media'], ['/users', 'Users & Profiles'], ['/profile-photos', 'Profile photos'], ['/ratings', 'Ratings & Votes']] },
   { label: 'PIPELINE', links: [['/prompt-chains', 'Prompt chains'], ['/prompt-chain-steps', 'Chain steps'], ['/prompt-chain-mix', 'Chain mix'], ['/terms', 'Terms'], ['/caption-examples', 'Generation examples']] },
   { label: 'MODELS', links: [['/llm-providers', 'LLM providers'], ['/llm-models', 'LLM models']] },
   { label: 'OBSERVABILITY', links: [['/generation-requests', 'Generation requests'], ['/llm-responses', 'LLM responses']] },
