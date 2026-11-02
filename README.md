@@ -71,6 +71,26 @@ npm run typecheck
 
 `sql/security-tests.sql` runs role-specific integration assertions and rolls all mutations back. It passed against the shared database on October 25, 2026: member isolation, blocked role insert/update, compatible member and owner profile upserts, administrator media CRUD, vote aggregation, cascading cleanup, atomic audit events and anonymous restrictions. No real content was changed by the test.
 
+## Week 6 feedback and Week 7 iteration
+
+| Source | Feedback |
+| --- | --- |
+| PM and feedback group | None received for the Week 6 admin panel as of November 1, 2026. |
+| Project owner | Admins must be able to upload profile photos. Uploads that hit a limit must say why. |
+
+No PM request is claimed. This iteration combines the owner's requests with a self-audit of the Week 6 admin panel.
+
+| Problem found | Change |
+| --- | --- |
+| Admins could not upload, replace or remove a member's profile photo. | New Profile photos page backed by the avatars storage bucket, with preview, replace and confirmed removal. |
+| Rejected uploads gave no reason. | Type and size are checked when a file is chosen and again on the server. The message states the file's size, the 4 MB limit and that the hosting provider imposes it. |
+| The rating app silently failed on any profile photo over 1 MB. | Server action body limit raised to 4.4 MB, under Vercel's 4.5 MB cap, with the same explanatory errors. |
+| The Users directory did not show profile photos. | Photo thumbnails beside each member. |
+| The audit trail covered caption edits only. | Every create, update and delete in the new sections, and every admin photo change, is audited in the same transaction. |
+| There was no visibility into AI generation. | The rating app logs each model call. Generation requests, LLM responses and an Overview pipeline-health panel show status, tokens and latency. |
+| The generation pipeline was hard-coded and invisible. | Prompt chains, steps, mix, terms, examples, providers and models are browsable, with target vs observed chain mix. |
+| A single flat sidebar would not scale to 16 sections. | Navigation grouped into Workspace, Pipeline, Models, Observability and Access. |
+
 ## Week 5 feedback
 
 The rating app's `docs/pm-feedback.md` records the PM/group feedback as “It's great” with no specific changes requested. Its deployed iteration includes inline voting, Judge mode, sharing, leaderboard, improved generation controls and Columbia campus content. These are documented self-audit and owner-requested improvements rather than invented PM requests.
