@@ -12,6 +12,32 @@ Separate Next.js admin application for the Caption Archive rating app. Google si
 - Inline form errors, pending states, delete confirmation, responsive navigation and accessible controls.
 - Transactional database audit log for administrator media changes, showing which administrator made each change.
 
+## Week 7: pipeline and observability
+
+Apply `sql/004_week7_observability.sql` once in the Supabase SQL editor. Until it is applied, the new pages say so instead of failing.
+
+| Requirement | Page | Access |
+| --- | --- | --- |
+| Users | `/users` | Read |
+| Prompt chains | `/prompt-chains` | Read |
+| Prompt chain steps | `/prompt-chain-steps` | Read |
+| Prompt chain mix | `/prompt-chain-mix` | Read and update, with target vs observed share |
+| Terms | `/terms` | Create, read, update, delete |
+| AI generated media | `/media` | Read and view pictures (plus full caption CRUD) |
+| Generation requests | `/generation-requests` | Read, with the logged outcome |
+| AI generation examples | `/caption-examples` | Create, read, update, delete |
+| LLM models | `/llm-models` | Create, read, update, delete |
+| LLM providers | `/llm-providers` | Create, read, update, delete |
+| LLM responses | `/llm-responses` | Read, with status, tokens and latency |
+| Allowed signup domains | `/signup-domains` | Create, read, update, delete |
+| Whitelisted email addresses | `/whitelisted-emails` | Create, read, update, delete |
+
+Image upload is not offered: captions use the fixed picture gallery bundled with the rating app, so the conditional image requirement does not apply.
+
+The migration seeds the pipeline the rating app actually runs: one chain per tone with three steps, the Gemini model behind each provider, a Columbia glossary, 15 curated example captions and two signup domains. It backfills the response log from captions already generated. Every change made in the panel is written to the audit trail in the same transaction. Chains and steps are versioned through migrations, so the panel reads them only.
+
+The rating app (`design-gen-ai`) logs each model call to `llm_responses`, including rejections and provider errors. Logging failures never block a member's generation. Signup domains and whitelisted emails are recorded for review; sign-in is not yet restricted by them.
+
 ## Existing project
 
 The GitHub repository and Vercel project are both named `caption-archive-admin`. Use the existing Supabase project shared with `trzaidi/design-gen-ai`; do not create another database.
@@ -38,6 +64,8 @@ npm ci
 npm run build
 npm run typecheck
 ```
+
+`sql/004_week7_observability.sql` was dry-run against PGlite with stand-ins for the existing tables: administrator CRUD and audit rows, read-only chains and steps, weight-only mix updates, blocked member reads and writes, and member response logging only for their own requests.
 
 `sql/security-tests.sql` runs role-specific integration assertions and rolls all mutations back. It passed against the shared database on October 25, 2026: member isolation, blocked role insert/update, compatible member and owner profile upserts, administrator media CRUD, vote aggregation, cascading cleanup, atomic audit events and anonymous restrictions. No real content was changed by the test.
 

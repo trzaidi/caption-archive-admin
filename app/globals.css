@@ -6,3 +6,14 @@
 :focus-visible{outline:2px solid var(--accent);outline-offset:4px}button:disabled{opacity:.6;cursor:wait}.skiplink{position:absolute;top:-100px;left:20px;z-index:10;background:var(--accent);color:#090d10;padding:12px}.skiplink:focus{top:12px}.pagination{display:flex;justify-content:space-between;gap:15px;margin-top:24px;font-size:12px;color:var(--accent)}dialog{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:30px;width:min(440px,90vw)}dialog::backdrop{background:#000a}dialog button{background:transparent;border:1px solid var(--line);padding:10px 14px;border-radius:4px;color:inherit}dialog .danger{color:var(--red)}@media(max-width:680px){.sidebarbottom{display:block;margin-top:15px}.sidebarbottom small,.sidebarbottom .email{display:none}.authcard{padding:28px}.authcard h1{font-size:40px}}
 
 .editor-picture{width:100%;max-height:220px;object-fit:contain;border-radius:5px;background:#090d10}.inventory-picture{width:90px;height:70px;object-fit:cover;border-radius:4px}.inventory>div:first-of-type{flex:1}@media(max-width:680px){.inventory{flex-wrap:wrap}.inventory-picture{width:72px;height:60px}}
+
+/* Week 7: grouped navigation, record tables and forms */
+.brand{margin-bottom:34px}.sidebar nav{gap:2px}.navgroup{display:grid;gap:2px;margin-bottom:18px}.navgroup .navlabel{margin-bottom:6px}.sidebar nav a{padding:10px 13px}
+.record-layout{grid-template-columns:minmax(300px,1fr) 2fr}.record-layout>.panel:last-child{min-width:0}
+td.wide{min-width:260px;max-width:520px;white-space:pre-wrap}tr.editing td{background:#16302a}
+.checkbox{display:flex!important;flex-direction:row;align-items:center;gap:10px}.checkbox input{width:auto}.editor small.muted{letter-spacing:0;font-size:11px}
+.mixrow{display:grid;grid-template-columns:1fr 80px 48px;gap:10px;align-items:center}.mixrow input[type=range]{padding:0;accent-color:var(--accent)}.mixrow span{color:var(--text);font-size:13px;text-align:right}
+.track.observed{margin-top:5px}.track.observed span{background:#5b7f9c}
+.healthgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.healthgrid div{border-top:1px solid var(--line);padding-top:14px}.healthgrid small{display:block;color:var(--muted);font-size:10px;letter-spacing:1px}.healthgrid strong{font-size:26px}
+@media(max-width:1000px){.record-layout{grid-template-columns:1fr}.healthgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:680px){.sidebar nav{display:flex;overflow-x:auto}.navgroup{display:flex;margin:0}.navgroup .navlabel{display:none}.brand{margin-bottom:15px}}
